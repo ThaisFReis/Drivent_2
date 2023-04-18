@@ -8,6 +8,10 @@ export async function createTicket(req: AuthenticatedRequest, res: Response) {
     const { userId } = req;
     const { ticketTypeId } = req.body;
 
+    if (!ticketTypeId) {
+        return res.status(httpStatus.BAD_REQUEST).send({});
+    }
+
     try {
         const ticket = await ticketService.createTicket(ticketTypeId, userId);
         return res.status(httpStatus.CREATED).send(ticket);

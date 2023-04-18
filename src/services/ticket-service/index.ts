@@ -10,13 +10,24 @@ export async function createTicket(ticketTypeId: number, userId: number) {
     if (!enrollment) {
         throw notFoundError();
     }
-
+/*
     const ticket = await ticketRepository.createTicket({
         ticketTypeId,
         enrollmentId: enrollment.id,
         status: TicketStatus.RESERVED,
     });
+*/
 
+    const ticketData = {
+        ticketTypeId,
+        enrollmentId: enrollment.id,
+        status: TicketStatus.RESERVED,
+    };
+
+    await ticketRepository.createTicket(ticketData);
+
+    const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
+    
     return ticket;
 }
 

@@ -2,12 +2,12 @@ import { Router } from 'express';
 import { createTicket, getTickets, getTicketTypes } from '@/controllers/ticket-controller';
 import { authenticateToken } from '@/middlewares';
 
-const ticketsRouter = Router();
+const ticketRouter = Router();
 
-ticketsRouter.
+ticketRouter.
     all('*', authenticateToken).
     post('/', createTicket).
     get('/', getTickets).
     get('/types', getTicketTypes);
 
-export default ticketsRouter;
+export { ticketRouter };

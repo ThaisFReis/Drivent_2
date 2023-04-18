@@ -11,11 +11,14 @@ async function createTicket(ticket: CreateTicketParams): Promise<Ticket> {
 }
 
 // Find Ticket by ID
-async function findTicketById(id: number): Promise<Ticket> {
+async function findTicketById(ticketId: number): Promise<Ticket> {
   return prisma.ticket.findUnique({
     where: {
-      id,
+      id: ticketId,
     },
+    include: {
+      Enrollment: true,
+    }
   })
 }
 
@@ -38,10 +41,25 @@ async function processTicketById(id: number): Promise<Ticket> {
 
 // Find Ticket By Enrollment ID
 async function findTicketByEnrollmentId(enrollmentId: number){
-  return prisma.ticket.findMany({
+  return prisma.ticket.findFirst({
     where: {
       enrollmentId,
     },
+    include: {
+      TicketType: true,
+    }
+  })
+}
+
+// Find Ticket With Type By Id
+async function findTicketWithTicketTypeById(ticketId: number){
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
+      TicketType: true,
+    }
   })
 }
 
@@ -53,6 +71,7 @@ const ticketRepository = {
   findTicketTypes,
   processTicketById,
   findTicketByEnrollmentId,
+  findTicketWithTicketTypeById,
 }
 
 export default ticketRepository;
