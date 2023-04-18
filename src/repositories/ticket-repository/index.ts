@@ -27,18 +27,6 @@ async function findTicketTypes(){
   return prisma.ticketType.findMany()
 }
 
-// Process Ticket by ID
-async function processTicketById(id: number): Promise<Ticket> {
-  return prisma.ticket.update({
-    where: {
-      id,
-    },
-    data: {
-      status: TicketStatus.PAID,
-    }
-  });
-}
-
 // Find Ticket By Enrollment ID
 async function findTicketByEnrollmentId(enrollmentId: number){
   return prisma.ticket.findFirst({
@@ -69,7 +57,6 @@ const ticketRepository = {
   createTicket,
   findTicketById,
   findTicketTypes,
-  processTicketById,
   findTicketByEnrollmentId,
   findTicketWithTicketTypeById,
 }

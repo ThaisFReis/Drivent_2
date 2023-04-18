@@ -11,7 +11,7 @@ export async function createPayment(req: AuthenticatedRequest, res: Response) {
 
     const token = authHeader && authHeader.split(' ')[1];
 
-    if(!userId){
+    if(!userId || !token){
         return res.status(httpStatus.UNAUTHORIZED).send();
     }
 
@@ -27,15 +27,15 @@ export async function createPayment(req: AuthenticatedRequest, res: Response) {
             return res.status(httpStatus.NOT_FOUND).send();
         }
 
-        return res.status(httpStatus.CREATED).send(payment);
+        return res.status(httpStatus.OK).send(payment);
 
     } catch (error) {
 
-        if(error.status === httpStatus.NOT_FOUND){
+        if(error.name === 'NotFoundError'){
             return res.status(httpStatus.NOT_FOUND).send();
         }
 
-        if(error.status === httpStatus.UNAUTHORIZED){
+        if(error.name === 'UnauthorizedError'){
             return res.status(httpStatus.UNAUTHORIZED).send();
         }
 
@@ -69,11 +69,11 @@ export async function findPaymentByTicketId(req: AuthenticatedRequest, res: Resp
     }
     catch (error) {
             
-            if(error.status === httpStatus.NOT_FOUND){
+            if(error.name === 'NotFoundError'){
                 return res.status(httpStatus.NOT_FOUND).send();
             }
     
-            if(error.status === httpStatus.UNAUTHORIZED){
+            if(error.name === 'UnauthorizedError'){
                 return res.status(httpStatus.UNAUTHORIZED).send();
             }
     

@@ -1,5 +1,5 @@
 import { prisma } from "@/config"
-import { Payment } from "@prisma/client"
+import { Payment, TicketStatus } from "@prisma/client"
 
 // Create Payment
 async function createPayment(payment: CreatePaymentParams, ticketId: number): Promise<Payment> {
@@ -20,11 +20,26 @@ async function findPaymentById(ticketId: number){
   })
 }
 
+// Update Ticket
+async function updateTicket(ticketId: number, payment: Payment){
+  return prisma.ticket.update({
+    where: {
+      id: ticketId,
+    },
+    data: {
+      status: TicketStatus.PAID,
+    }
+  })
+}
+
+
+
 export type CreatePaymentParams = Omit<Payment, "id" | "createdAt" | "updatedAt">
 
 const paymentRepository = {
     createPayment,
     findPaymentById,
+    updateTicket,
 }
 
 export default paymentRepository
