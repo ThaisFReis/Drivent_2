@@ -6,7 +6,7 @@ const paymentRouter = Router();
 
 paymentRouter.
     all('*', authenticateToken).
-    post('/', createPayment).
+    post('/process', createPayment).
     get('/', findPaymentByTicketId);
 
 export { paymentRouter };
