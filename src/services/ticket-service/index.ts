@@ -4,27 +4,20 @@ import enrollmentRepository from "@/repositories/enrollment-repository";
 import { TicketStatus } from "@prisma/client";
 
 // Create Ticket
-export async function createTicket(ticketTypeId: number, userId: number) {
+export async function createTicket(ticketTypeId: number, userId: number ) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
     if (!enrollment) {
         throw notFoundError();
     }
-/*
-    const ticket = await ticketRepository.createTicket({
-        ticketTypeId,
-        enrollmentId: enrollment.id,
-        status: TicketStatus.RESERVED,
-    });
-*/
 
-    const ticketData = {
+    const data = {
         ticketTypeId,
         enrollmentId: enrollment.id,
         status: TicketStatus.RESERVED,
     };
 
-    await ticketRepository.createTicket(ticketData);
+    await ticketRepository.createTicket(data);
 
     const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
     

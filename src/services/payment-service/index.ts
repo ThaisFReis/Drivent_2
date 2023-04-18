@@ -3,18 +3,36 @@ import ticketRepository from "@/repositories/ticket-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import { notFoundError, unauthorizedError } from "@/errors";
 
-// Verify Payment
-export async function verifyPayment(userId: number, ticketId: number) {
+// Verify Ticket
+export async function verifyTicket(ticketId: number) {
     const ticket = await ticketRepository.findTicketById(ticketId);
-    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
-    if (!ticket || !enrollment) {
+    if(!ticket) {
         throw notFoundError();
     }
 
-    if (enrollment.userId !== userId) {
+    return true;
+}
+
+// Verify Enrollment
+export async function verifyEnrollment(userId: number, enrollmentId: number) {
+    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+
+    if(!enrollment) {
         throw unauthorizedError();
     }
+
+    if(enrollment.userId !== userId) {
+        throw unauthorizedError();
+    }
+
+    return true;
+}
+
+// Verify Payment
+export async function verifyPayment(userId: number, ticketId: number) {
+    await verifyTicket(ticketId);
+    await verifyEnrollment(userId, ticketId);
 
     return true;
 }
@@ -52,11 +70,8 @@ export async function findPaymentByTicketId(userId: number, ticketId: number) {
 }
 
 export type CreatePaymentParams = {
-    name: string,
     number: number,
     issuer: string,
-    cvv: number
-    expirationDate: Date,
 }
 
 const paymentService = {

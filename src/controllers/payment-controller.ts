@@ -7,6 +7,9 @@ import { AuthenticatedRequest } from "@/middlewares";
 export async function createPayment(req: AuthenticatedRequest, res: Response) {
     const { userId } = req;
     const { ticketId, cardData } = req.body;
+    const authHeader = req.headers.authorization;
+
+    const token = authHeader && authHeader.split(' ')[1];
 
     if(!userId){
         return res.status(httpStatus.UNAUTHORIZED).send();

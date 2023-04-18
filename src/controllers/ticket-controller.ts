@@ -7,9 +7,16 @@ import { AuthenticatedRequest } from "@/middlewares";
 export async function createTicket(req: AuthenticatedRequest, res: Response) {
     const { userId } = req;
     const { ticketTypeId } = req.body;
+    const authHeader = req.headers.authorization;
+
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!ticketTypeId) {
         return res.status(httpStatus.BAD_REQUEST).send({});
+    }
+
+    if (!userId || !token) {
+        return res.status(httpStatus.UNAUTHORIZED).send({});
     }
 
     try {
